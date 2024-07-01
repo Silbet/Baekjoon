@@ -1,0 +1,17 @@
+#include <iostream>
+using namespace std;
+// 1057. 토너먼트
+
+int main() {
+    ios::sync_with_stdio(0);
+    cin.tie(0);
+    int N, Kim, Lim, round = 1;
+    cin >> N >> Kim >> Lim;
+    while(1) {
+        if(Kim<Lim && Lim-Kim == 1 && Lim%2 == 0 || Lim<Kim && Kim-Lim == 1 && Kim%2 == 0) break;
+        round++;
+        Kim = (Kim+1)/2;
+        Lim = (Lim+1)/2;
+    }
+    cout << round;
+}
