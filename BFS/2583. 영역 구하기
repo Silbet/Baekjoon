@@ -1,68 +1,61 @@
 #include<iostream>
-#include<algorithm>
 #include<utility>
 #include<queue>
+#include<algorithm>
 using namespace std;
 #define X first
 #define Y second
 
 // 2583. 영역 구하기
-int board[102][102]; // board == 1 : 처음에 그리는 직사각형. (지나갈 수 없는 공간)
+int board[102][102];
 bool vis[102][102];
-int area[102];
-int n, m;
+int area_size[102];
 
 int dx[4] = {1, 0, -1, 0};
-int dy[4] = {0, 1, 0, -1};
+int dy[4] = {0, -1, 0, 1};
+int M, N;
 
 int main() {
   ios::sync_with_stdio(0);
   cin.tie(0);
-  int k, count_rectangle = 0, index = 0;
-
   queue<pair<int,int>> Q;
-  
-  cin >> m >> n >> k;
-  for(int i = 0; i < k; i++) {
-    int x1, x2, y1, y2;
+  int K, count_area = 0;
+  cin >> M >> N >> K;
+  for(int i = 0; i < K; i++) {
+    int x1, y1, x2, y2;
     cin >> x1 >> y1 >> x2 >> y2;
     for(int x = x1; x < x2; x++) {
-      for(int y = y1; y < y2; y++)
+      for(int y = y1; y < y2; y++) 
         board[y][x] = 1;
     }
   }
-  for(int i = 0; i < m; i++) {
-    for(int j = 0; j < n; j++) {
-      cout << board[i][j] << " ";
-    }
-    cout << "\n";
-  }
 
-  for(int i = 0; i < m; i++) {
-    for(int j = 0; j < n; j++) {
+  for(int i = 0; i < M; i++) {
+    for(int j = 0; j < N; j++) {
       if(board[i][j] == 1 || vis[i][j] == 1) continue;
-      int count_area = 1;
-      count_rectangle++;
-      vis[i][j] = 1;
+      int size = 1;
       Q.push({i,j});
+      vis[i][j] = 1;
+      count_area++;
+
       while(!Q.empty()) {
         pair<int,int> cur = Q.front(); Q.pop();
         for(int dir = 0; dir < 4; dir++) {
           int nx = cur.X + dx[dir];
           int ny = cur.Y + dy[dir];
 
-          if(nx < 0 || nx >= m || ny < 0 || ny >= n) continue;
-          if(vis[nx][ny] == 1 || board[nx][ny] == 1) continue;
+          if(nx < 0 || nx >= M || ny < 0 || ny >= N) continue;
+          if(board[nx][ny] == 1 || vis[nx][ny] == 1) continue;
 
-          count_area++;
+          Q.push({nx,ny});
           vis[nx][ny] = 1;
-          Q.push({nx, ny});
+          size++;
         }
       }
-      area[index++] = count_area;
+      area_size[count_area - 1] = size;
     }
   }
-  sort(area, area+k);
-  cout << count_rectangle << "\n";
-  for(int i = 0; i < index; i++) cout << area[i] << " ";  
+  sort(area_size, area_size + count_area);
+  cout << count_area << "\n";
+  for(int i = 0; i < count_area; i++) cout << area_size[i] << " ";
 }
